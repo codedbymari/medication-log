@@ -1,81 +1,101 @@
-/* General Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #fce7f3;
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Light Mode (Default) */
+body {
+    background: #f5f5f4 url('paper-texture.png') repeat; /* Soft paper texture */
+    color: #333;
+    transition: background 0.3s, color 0.3s;
 }
 
 /* Container */
 .container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
     width: 100%;
+    max-width: 480px; /* Makes it look good on all devices */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 24px;
+    margin: 40px auto;
+    border-radius: 16px;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-/* Form Elements */
+/* Headline */
+h2 {
+    font-size: 1.8rem;
+    text-align: center;
+    font-weight: 700;
+    color: #2563eb; /* Modern blue shade */
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 label {
-    font-weight: bold;
-    color: #db2777;
-    display: block;
-    margin-bottom: 5px;
+    font-weight: 500;
+    color: #4b5563;
 }
 
 input {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #db2777;
-    border-radius: 5px;
-    outline: none;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
-/* Buttons */
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #db2777;
+    background: #2563eb; /* Modern blue */
     color: white;
+    padding: 12px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s;
 }
 
 button:hover {
-    background-color: #be185d;
+    background: #1e40af; /* Slightly darker blue */
 }
 
-/* Pill List */
-ul {
-    list-style: none;
-    padding: 0;
+/* Stickers */
+.sticker {
+    position: absolute;
+    width: 60px; /* Sticker size */
+    opacity: 0.9;
+    transform: rotate(-5deg);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-li {
-    background: #fce7f3;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #db2777;
+/* Specific Sticker Positions */
+.sticker.pill {
+    top: -20px;
+    left: -20px;
 }
 
-li button {
-    background-color: #dc2626;
-    padding: 5px 10px;
-    border-radius: 5px;
+.sticker.clock {
+    top: 50%;
+    right: -25px;
+    transform: rotate(8deg);
 }
 
-li button:hover {
-    background-color: #b91c1c;
+.sticker.heart {
+    bottom: -20px;
+    left: 10px;
+    transform: rotate(-10deg);
+}
+
+
+.toggle-button:hover {
+    background: #1e40af;
 }
