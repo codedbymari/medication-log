@@ -3,38 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Your Medication</title>
+    <title>PillsnPotion</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50 flex flex-col justify-center items-center min-h-screen">
-    
-    <div class="bg-white shadow-xl p-8 rounded-2xl w-full max-w-md">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Track Your Medication</h2>
-        <p class="text-gray-600 text-center mb-6">This tracker helps you log your daily medications, so you never have to wonder or miss a dose.</p>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
 
-        <form id="pill-form" class="space-y-5">
+    <!-- Header -->
+    <header class="w-full text-center mt-8">
+        <h1 class="text-3xl font-bold text-blue-600">PillsnPotion</h1>
+    </header>
+
+    <!-- Main Content -->
+    <div class="bg-white p-6 rounded w-full max-w-md mt-8 shadow-lg">
+        <p class="text-center text-gray-600 mb-6">Log your  medications, so you never have to wonder or miss a dose.</p>
+
+        <!-- Medication Form -->
+        <form id="pill-form" class="space-y-2">
             <div>
-                <label for="pill-name" class="block text-gray-700 font-medium">Medication:</label>
-                <input type="text" id="pill-name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" required>
+                <label for="pill-name" class="block text-gray-700 font-medium">Medication Name:</label>
+                <input type="text" id="pill-name" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Enter your medication name" required>
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold transition">
-                SUBMIT
+
+            <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded mt-2 hover:bg-blue-700">
+                Submit
             </button>
         </form>
 
+        <!-- Logged Medications -->
         <div class="mt-6">
-            <h3 class="text-lg font-bold text-gray-700 border-b pb-2">meds you logged</h3>
-            <ul id="pill-list" class="mt-4 space-y-3">
-                <!-- List of pills will be displayed here -->
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Your Medications</h3>
+            <ul id="pill-list">
+                <!-- List of pills will appear here -->
             </ul>
         </div>
-    </div> <!-- This closes the main container -->
+    </div>
 
-    <!-- Footer (outside the container) -->
-    <footer class="mt-8 text-center text-gray-500 text-sm">
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-8">
         <p>Made with ❤️ by Maryama</p>
-        <p>For everyone (okay, mostly just me) who struggles to remember <br> whether they've taken their meds.</p>
     </footer>
 
     <script src="script.js"></script>
