@@ -1,73 +1,60 @@
 document.addEventListener("DOMContentLoaded", function () {
     const pillForm = document.getElementById("pill-form");
     const pillList = document.getElementById("pill-list");
-    const pillSection = document.querySelector('.mt-6');  // The section where meds are displayed
-
-    // Load saved pills from localStorage
+    const pillSection = document.querySelector('.mt-6');
+    
     const savedPills = JSON.parse(localStorage.getItem("pills")) || [];
+    pillSection.style.display = savedPills.length > 0 ? 'block' : 'none';
 
-    if (savedPills.length > 0) {
-        pillSection.style.display = 'block';  // Show section if there are pills logged
-    } else {
-        pillSection.style.display = 'none';  // Hide section if no pills are logged
-    }
-
-    savedPills.forEach(pill => addPillToDOM(pill.name, pill.date, pill.time));
+    savedPills.forEach(pill => addPillToDOM(pill));
 
     pillForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const pillName = document.getElementById("pill-name").value.trim();
-        const now = new Date();
-
-        const pillDate = now.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        const pillTime = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
-
-        if (pillName === "") {
+        if (!pillName) {
             alert("Please enter the medication name.");
             return;
         }
 
-        addPillToDOM(pillName, pillDate, pillTime);
-        savePill(pillName, pillDate, pillTime);
+        const now = new Date();
+        const pillDate = now.toLocaleDateString();
+        const pillTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Clear form fields
+        addPillToDOM({ name: pillName, date: pillDate, time: pillTime });
+        savePill({ name: pillName, date: pillDate, time: pillTime });
+
         pillForm.reset();
-
-        // Show the pill section if this is the first pill logged
         pillSection.style.display = 'block';
     });
 
-    function addPillToDOM(name, date, time) {
+    function addPillToDOM(pill) {
         const li = document.createElement("li");
         li.className = "flex justify-between items-center bg-gray-100 p-3 rounded-lg shadow-sm";
-
         li.innerHTML = `
-            <span class="font-medium text-gray-700">${name} - <span class="text-blue-500">${date} at ${time}</span></span>
+            <span class="font-medium text-gray-700">${pill.name} - <span class="text-blue-500">${pill.date} at ${pill.time}</span></span>
             <button class="text-red-500 hover:text-red-700 delete-btn">✖</button>
         `;
 
-        // Add delete functionality
         li.querySelector(".delete-btn").addEventListener("click", function () {
             li.remove();
-            removePill(name, date, time);
+            removePill(pill);
         });
 
         pillList.appendChild(li);
     }
 
-    function savePill(name, date, time) {
+    function savePill(pill) {
         const pills = JSON.parse(localStorage.getItem("pills")) || [];
-        pills.push({ name, date, time });
+        pills.push(pill);
         localStorage.setItem("pills", JSON.stringify(pills));
     }
 
-    function removePill(name, date, time) {
+    function removePill(pill) {
         let pills = JSON.parse(localStorage.getItem("pills")) || [];
-        pills = pills.filter(pill => !(pill.name === name && pill.date === date && pill.time === time));
+        pills = pills.filter(p => !(p.name === pill.name && p.date === pill.date && p.time === pill.time));
         localStorage.setItem("pills", JSON.stringify(pills));
 
-        // Hide the section if no pills are left
         if (pills.length === 0) {
             pillSection.style.display = 'none';
         }
