@@ -1,65 +1,75 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("pill-form");
+document.addEventListener("DOMContentLoaded", function () {
+    const pillForm = document.getElementById("pill-form");
     const pillList = document.getElementById("pill-list");
-    let pills = JSON.parse(localStorage.getItem("pills")) || [];
+    const pillSection = document.querySelector('.mt-6');  // The section where meds are displayed
 
-    // Save pills to localStorage
-    function savePills() {
-        localStorage.setItem("pills", JSON.stringify(pills));
+    // Load saved pills from localStorage
+    const savedPills = JSON.parse(localStorage.getItem("pills")) || [];
+
+    if (savedPills.length > 0) {
+        pillSection.style.display = 'block';  // Show section if there are pills logged
+    } else {
+        pillSection.style.display = 'none';  // Hide section if no pills are logged
     }
 
-    // Render pills on the page
-    function renderPills() {
-        pillList.innerHTML = "";
-        pills.forEach((pill, index) => {
-            const li = document.createElement("li");
-            li.classList.add(
-                "bg-pink-100", "p-3", "rounded-lg",
-                "flex", "justify-between", "items-center",
-                "border", "border-pink-300"
-            );
-            li.innerHTML = `
-                <span>${pill.name} - ${pill.time} (${pill.date})</span>
-                <button class="remove-btn bg-pink-600 text-white p-1 rounded" data-index="${index}">Remove</button>
-            `;
-            pillList.appendChild(li);
-        });
+    savedPills.forEach(pill => addPillToDOM(pill.name, pill.date, pill.time));
 
-        // Attach event listeners to remove buttons
-        document.querySelectorAll(".remove-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                removePill(this.dataset.index);
-            });
-        });
-    }
+    pillForm.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    // Add new pill
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
+        const pillName = document.getElementById("pill-name").value.trim();
+        const now = new Date();
 
-        const name = document.getElementById("pill-name").value.trim();
-        const time = document.getElementById("pill-time").value.trim();
-        const date = new Date().toLocaleDateString();
+        const pillDate = now.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const pillTime = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
 
-        if (name === "" || time === "") {
-            alert("Please fill in all fields.");
+        if (pillName === "") {
+            alert("Please enter the medication name.");
             return;
         }
 
-        // Push new pill to array and save
-        pills.push({ name, time, date });
-        savePills();
-        renderPills();
-        form.reset();
+        addPillToDOM(pillName, pillDate, pillTime);
+        savePill(pillName, pillDate, pillTime);
+
+        // Clear form fields
+        pillForm.reset();
+
+        // Show the pill section if this is the first pill logged
+        pillSection.style.display = 'block';
     });
 
-    // Remove pill from list
-    function removePill(index) {
-        pills.splice(index, 1);
-        savePills();
-        renderPills();
+    function addPillToDOM(name, date, time) {
+        const li = document.createElement("li");
+        li.className = "flex justify-between items-center bg-gray-100 p-3 rounded-lg shadow-sm";
+
+        li.innerHTML = `
+            <span class="font-medium text-gray-700">${name} - <span class="text-blue-500">${date} at ${time}</span></span>
+            <button class="text-red-500 hover:text-red-700 delete-btn">✖</button>
+        `;
+
+        // Add delete functionality
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            li.remove();
+            removePill(name, date, time);
+        });
+
+        pillList.appendChild(li);
     }
 
-    // Initial render of pills on page load
-    renderPills();
+    function savePill(name, date, time) {
+        const pills = JSON.parse(localStorage.getItem("pills")) || [];
+        pills.push({ name, date, time });
+        localStorage.setItem("pills", JSON.stringify(pills));
+    }
+
+    function removePill(name, date, time) {
+        let pills = JSON.parse(localStorage.getItem("pills")) || [];
+        pills = pills.filter(pill => !(pill.name === name && pill.date === date && pill.time === time));
+        localStorage.setItem("pills", JSON.stringify(pills));
+
+        // Hide the section if no pills are left
+        if (pills.length === 0) {
+            pillSection.style.display = 'none';
+        }
+    }
 });
