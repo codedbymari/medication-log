@@ -1,4 +1,3 @@
-/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -6,17 +5,17 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* Light Mode (Default) */
 body {
-    background: #f5f5f4 url('paper-texture.png') repeat; /* Soft paper texture */
+    background: #f5f5f4; /* Soft paper texture */
     color: #333;
-    transition: background 0.3s, color 0.3s;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 20px;
 }
 
-/* Container */
 .container {
     width: 100%;
-    max-width: 480px; /* Makes it look good on all devices */
+    max-width: 480px; /* Ideal for most devices */
     background: rgba(255, 255, 255, 0.9);
     padding: 24px;
     margin: 40px auto;
@@ -25,77 +24,140 @@ body {
     position: relative;
 }
 
-/* Headline */
-h2 {
-    font-size: 1.8rem;
+header {
     text-align: center;
-    font-weight: 700;
-    color: #2563eb; /* Modern blue shade */
+    padding: 20px 0;
 }
 
-/* Form */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.logo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px 20px;
+    z-index: 1000;
 }
 
-label {
-    font-weight: 500;
-    color: #4b5563;
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1e40af;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
 }
 
-input {
+h1, h2, h3 {
+    color: #1e40af;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+p {
+    color: #666;
+    font-size: 1rem;
+}
+
+input[type="text"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #d1d5db;
+    padding: 12px;
     border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 8px;
+    margin-bottom: 16px; /* Reduced margin-bottom */
     font-size: 1rem;
 }
 
 button {
-    background: #2563eb; /* Modern blue */
-    color: white;
+    width: 100%;
     padding: 12px;
+    background-color: #2563eb;
+    color: #fff;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease;
+    margin-top: 12px; /* Reduced margin-top to bring button closer */
 }
 
 button:hover {
-    background: #1e40af; /* Slightly darker blue */
+    background-color: #1e40af;
 }
 
-/* Stickers */
-.sticker {
-    position: absolute;
-    width: 60px; /* Sticker size */
-    opacity: 0.9;
-    transform: rotate(-5deg);
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
-/* Specific Sticker Positions */
-.sticker.pill {
-    top: -20px;
-    left: -20px;
+footer {
+    margin-top: 16px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+    padding: 20px;
 }
 
-.sticker.clock {
-    top: 50%;
-    right: -25px;
-    transform: rotate(8deg);
-}
-
-.sticker.heart {
-    bottom: -20px;
-    left: 10px;
-    transform: rotate(-10deg);
+ul {
+    list-style: none;
+    margin-top: 16px;
 }
 
 
-.toggle-button:hover {
-    background: #1e40af;
+ul li button {
+    color: red;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem; /* Smaller font size */
+    padding: 6px 8px; /* Reduced padding */
+    border-radius: 50%; /* Make it circular */
+    width: 24px; /* Fixed width */
+    height: 24px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+ul li button:hover {
+    color: darkred;
+    background-color: #f0f0f0; /* Subtle hover effect */
+}
+
+
+@media (max-width: 768px) {
+    .logo {
+        font-size: 20px;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    footer {
+        font-size: 0.75rem;
+        padding: 10px;
+    }
+
+    h2, h3 {
+        font-size: 1.25rem;
+    }
 }
