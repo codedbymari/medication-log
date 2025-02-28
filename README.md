@@ -1,10 +1,13 @@
-check it out here https://pillsnpotion.netlify.app/
+# Medication Log
 
-A simple web application that helps users keep track of their pills. Pills are stored in local storage, so the data remains even after refreshing the page.
+Check it out here: https://pillsnpotion.netlify.app/
 
-Features
-Add pills with a name and time
-View the list of saved pills
-Remove pills from the list
-Saves data in the browser's local storage
-Technologies Used
+A simple and intuitive web application designed to help users track their medication. All medication logs are stored in the browser's local storage, ensuring data persistence even after a page refresh.
+
+## Features:
+- Add and save medication names
+- Automatically records the time and date of each entry
+- View your medication log to remember what you've taken and when
+- Data is securely stored in local storage for easy access
+
+Try it out and stay on top of your medication! 🚀
