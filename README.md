@@ -1,4 +1,4 @@
-# Medication Log
+# Medication Log/Tracker
 
 Check it out here: https://pillsnpotion.netlify.app/
 
