@@ -1,6 +1,6 @@
 # Medication Log/Tracker
 
-Check it out here: https://pillsnpotion.netlify.app/
+Check it out here: medication-log.vercel.app
 
 A simple and intuitive web application designed to help users track their medication. All medication logs are stored in the browser's local storage, ensuring data persistence even after a page refresh.
 
