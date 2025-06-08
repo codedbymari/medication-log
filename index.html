@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Log your medications easily with our simple and intuitive interface.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medication Log</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
@@ -13,19 +14,19 @@
     <header class="w-full text-center mt-8">
         <h1 class="text-3xl font-bold text-blue-600">PillsnPotion</h1>
     </header>
-
-    <!-- Main Content -->
-    <div class="bg-white p-6 rounded w-full max-w-md mt-8 shadow-lg">
+<main>
+  <section class="bg-white p-6 rounded w-full max-w-md mt-8 shadow-lg">
         <p class="text-center text-gray-600 mb-6">Log your  medications, so you never have to wonder or miss a dose.</p>
 
         <!-- Medication Form -->
         <form id="pill-form" class="space-y-2">
             <div>
                 <label for="pill-name" class="block text-gray-700 font-medium">Medication Name:</label>
-                <input type="text" id="pill-name" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Enter your medication name" required>
+                <input type="text" id="pill-name" aria-required="true"> required="true"> class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Enter your medication name" required>
             </div>
-
-            <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded mt-2 hover:bg-blue-700">
+  </section>
+</main>
+            <button type="submit" aria-label="Submit Medication"> class="w-full bg-blue-600 text-white p-3 rounded mt-2 hover:bg-blue-700">
                 Submit
             </button>
         </form>
