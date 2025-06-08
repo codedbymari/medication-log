@@ -1,4 +1,6 @@
-/* Root & Theme */
+/* ================ */
+/*   Root & Theme   */
+/* ================ */
 :root {
   --primary: #7dd3fc;
   --primary-dark: #0ea5e9;
@@ -18,6 +20,25 @@
   --transition: 0.18s cubic-bezier(.4,0,.2,1);
 }
 
+/* Dark mode automatic support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #38bdf8;
+    --primary-dark: #0ea5e9;
+    --primary-darker: #0284c7;
+    --accent: #0f172a;
+    --accent-hover: #1e293b;
+    --background: #0f172a;
+    --container-bg: #1e293b;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --container-shadow: 0 4px 32px rgba(15, 23, 42, 0.3);
+  }
+}
+
+/* ================= */
+/*     Reset & Base  */
+/* ================= */
 *,
 *::before,
 *::after {
@@ -37,8 +58,9 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 
-/*  Header */
-
+/* ================ */
+/*     Header       */
+/* ================ */
 header {
   text-align: center;
   padding: 2rem 0 1rem 0;
@@ -58,7 +80,9 @@ header {
   background-clip: text;
 }
 
-/* Layout  */
+/* ================ */
+/*     Layout       */
+/* ================ */
 .container {
   width: 100%;
   max-width: 430px;
@@ -83,7 +107,9 @@ main {
   min-height: calc(100vh - 200px);
 }
 
-/* Font */
+/* ================ */
+/*     Typography   */
+/* ================ */
 h1, h2, h3 {
   color: var(--primary-darker);
   margin-bottom: 1rem;
@@ -108,7 +134,9 @@ p {
   text-align: center;
 }
 
-/*  Form  */
+/* ================ */
+/*     Forms        */
+/* ================ */
 form {
   display: flex;
   flex-direction: column;
@@ -158,8 +186,9 @@ input::placeholder {
   color: var(--text-secondary);
 }
 
-/* Button */
-
+/* ================ */
+/*     Buttons      */
+/* ================ */
 button,
 .button {
   display: inline-block;
@@ -198,7 +227,9 @@ button:disabled,
   transform: none;
 }
 
-/* Lists  */
+/* ================ */
+/*     Lists        */
+/* ================ */
 ul {
   list-style: none;
   margin-top: 1rem;
@@ -246,7 +277,9 @@ ul li:hover {
   transform: scale(1.1);
 }
 
-/*  Alerts  */
+/* ================ */
+/*     Alerts       */
+/* ================ */
 .alert {
   border-radius: 8px;
   padding: 1rem;
@@ -268,7 +301,9 @@ ul li:hover {
   border-color: var(--success);
 }
 
-/* Footer */
+/* ================ */
+/*     Footer       */
+/* ================ */
 footer {
   margin-top: 3rem;
   text-align: center;
@@ -277,8 +312,9 @@ footer {
   padding: 1.5em 0;
 }
 
-/* Accessibility */
-
+/* ================ */
+/*   Accessibility  */
+/* ================ */
 a, button, input, select, textarea {
   transition: outline var(--transition), box-shadow var(--transition);
 }
@@ -292,8 +328,168 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* Responsiveness */
+/* ================ */
+/*  New Components  */
+/* ================ */
 
+/* Notification Banner */
+.notification-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border: 1px solid var(--primary-dark);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.notification-banner p {
+  color: var(--primary-darker);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Small Buttons */
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  margin: 0 0.5rem;
+  width: auto;
+  display: inline-block;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-dark);
+  color: var(--primary-dark);
+}
+
+.btn-outline:hover {
+  background: var(--primary-dark);
+  color: white;
+}
+
+/* Controls Section */
+.controls-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--accent);
+  border-radius: 12px;
+  border: 1px solid rgba(125, 211, 252, 0.2);
+}
+
+.search-container {
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  background: white;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.search-input:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.1);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: var(--primary);
+  color: var(--primary-darker);
+  border: 1px solid var(--primary-dark);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 120px;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-dark);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Enhanced List Items */
+.medication-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.medication-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.medication-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.medication-details {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.medication-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.meta-tag {
+  background: var(--primary-dark);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.reminder-badge {
+  background: var(--success);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.no-results p {
+  font-style: italic;
+}
+
+/* Textarea Styling */
+textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: var(--font);
+}
+
+/* ================ */
+/*  Responsiveness  */
+/* ================ */
 @media (max-width: 600px) {
   body {
     padding: 1rem;
@@ -312,6 +508,19 @@ textarea:focus-visible {
   header {
     padding: 1rem 0;
   }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-secondary {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .controls-section {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 370px) {
@@ -321,5 +530,16 @@ textarea:focus-visible {
   
   .logo {
     font-size: 1.8rem;
+  }
+  
+  .medication-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-small {
+    display: block;
+    width: 100%;
+    margin: 0.25rem 0;
   }
 }
