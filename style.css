@@ -332,6 +332,62 @@ textarea:focus-visible {
 /*  New Components  */
 /* ================ */
 
+/* Feature Panels */
+.feature-panel {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--accent);
+  border-radius: 12px;
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Feature Tabs */
+.feature-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 2rem 0 1rem 0;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.7rem 1rem;
+  background: var(--accent);
+  color: var(--primary-darker);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-top: 0;
+}
+
+.tab-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(125, 211, 252, 0.15);
+}
+
+.tab-button.active {
+  background: var(--primary-dark);
+  color: white;
+  box-shadow: 0 4px 12px rgba(125, 211, 252, 0.3);
+}
+
 /* Notification Banner */
 .notification-banner {
   background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -518,8 +574,13 @@ textarea {
     min-width: auto;
   }
   
-  .controls-section {
-    padding: 1rem;
+  .feature-tabs {
+    flex-direction: column;
+  }
+  
+  .tab-button {
+    width: 100%;
+    min-width: auto;
   }
 }
 
