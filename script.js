@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const pillSection = document.getElementById("medications-section");
     const notificationSetup = document.getElementById("notification-setup");
     
+    // Toggle elements
+    const showMoreFieldsBtn = document.getElementById("show-more-fields");
+    const additionalFields = document.getElementById("additional-fields");
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const featurePanels = document.querySelectorAll(".feature-panel");
+    
     // Button elements
     const enableNotificationsBtn = document.getElementById("enable-notifications");
     const dismissNotificationBtn = document.getElementById("dismiss-notification");
@@ -19,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Global variables
     let allPills = [];
     let reminders = [];
+    let activeTab = null;
+    let additionalFieldsVisible = false;
+    let notificationPermission = false;
     
     // Initialize app
     init();
@@ -31,8 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function loadPills() {
-        allPills = JSON.parse(localStorage.getItem("pills")) || [];
-        reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+        try {
+            allPills = JSON.parse(localStorage.getItem("pills")) || [];
+            reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+        } catch (error) {
+            console.warn("Error loading data from localStorage:", error);
+            allPills = [];
+            reminders = [];
+        }
         displayPills(allPills);
         updatePillSectionVisibility();
     }
@@ -41,18 +56,65 @@ document.addEventListener("DOMContentLoaded", function () {
         // Form submission
         pillForm.addEventListener("submit", handleFormSubmit);
         
+        // Toggle additional fields
+        showMoreFieldsBtn.addEventListener("click", toggleAdditionalFields);
+        
+        // Tab functionality
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => toggleTab(button.dataset.tab));
+        });
+        
         // Search functionality
         searchInput.addEventListener("input", handleSearch);
         
         // Notification handlers
-        enableNotificationsBtn.addEventListener("click", enableNotifications);
-        dismissNotificationBtn.addEventListener("click", dismissNotificationBanner);
+        if (enableNotificationsBtn) {
+            enableNotificationsBtn.addEventListener("click", enableNotifications);
+        }
+        if (dismissNotificationBtn) {
+            dismissNotificationBtn.addEventListener("click", dismissNotificationBanner);
+        }
         
         // Export/Import handlers
-        exportCsvBtn.addEventListener("click", exportToCSV);
-        exportJsonBtn.addEventListener("click", exportToJSON);
-        importBtn.addEventListener("click", () => importInput.click());
-        importInput.addEventListener("change", importData);
+        if (exportCsvBtn) exportCsvBtn.addEventListener("click", exportToCSV);
+        if (exportJsonBtn) exportJsonBtn.addEventListener("click", exportToJSON);
+        if (importBtn) importBtn.addEventListener("click", () => importInput.click());
+        if (importInput) importInput.addEventListener("change", importData);
+    }
+    
+    // Toggle functionality
+    function toggleAdditionalFields() {
+        additionalFieldsVisible = !additionalFieldsVisible;
+        additionalFields.style.display = additionalFieldsVisible ? 'block' : 'none';
+        showMoreFieldsBtn.textContent = additionalFieldsVisible ? 'Hide Details' : 'Add More Details';
+    }
+    
+    function toggleTab(tabName) {
+        // Hide all panels first
+        featurePanels.forEach(panel => {
+            if (panel.dataset.panel) {
+                panel.style.display = 'none';
+            }
+        });
+        
+        // Remove active class from all buttons
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // If clicking the same tab, just close it
+        if (activeTab === tabName) {
+            activeTab = null;
+            return;
+        }
+        
+        // Show the selected panel and activate button
+        const targetPanel = document.querySelector(`[data-panel="${tabName}"]`);
+        const targetButton = document.querySelector(`[data-tab="${tabName}"]`);
+        
+        if (targetPanel && targetButton) {
+            targetPanel.style.display = 'block';
+            targetButton.classList.add('active');
+            activeTab = tabName;
+        }
     }
     
     // Form handling
@@ -89,7 +151,12 @@ document.addEventListener("DOMContentLoaded", function () {
             addReminder(newPill, reminderTime);
         }
         
+        // Reset forms
         pillForm.reset();
+        if (additionalFieldsVisible) {
+            document.getElementById("detailed-form").reset();
+        }
+        
         showMessage(`${pillName} logged successfully!`, "success");
     }
     
@@ -98,6 +165,15 @@ document.addEventListener("DOMContentLoaded", function () {
         savePills();
         displayPills(allPills);
         updatePillSectionVisibility();
+    }
+    
+    function savePills() {
+        try {
+            localStorage.setItem("pills", JSON.stringify(allPills));
+            localStorage.setItem("reminders", JSON.stringify(reminders));
+        } catch (error) {
+            console.warn("Error saving data to localStorage:", error);
+        }
     }
     
     function displayPills(pills) {
@@ -115,10 +191,13 @@ document.addEventListener("DOMContentLoaded", function () {
             li.innerHTML = createPillHTML(pill);
             
             // Add delete functionality
-            li.querySelector(".delete-btn").addEventListener("click", () => {
-                deletePill(pill.id);
-                showMessage(`${pill.name} removed from log.`, "success");
-            });
+            const deleteBtn = li.querySelector(".delete-btn");
+            if (deleteBtn) {
+                deleteBtn.addEventListener("click", () => {
+                    deletePill(pill.id);
+                    showMessage(`${pill.name} removed from log.`, "success");
+                });
+            }
             
             pillList.appendChild(li);
         });
@@ -131,18 +210,16 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="medication-item">
                 <div class="medication-header">
                     <div>
-                        <div class="medication-name">${pill.name}</div>
+                        <div class="medication-name">${escapeHtml(pill.name)}</div>
                         <div class="medication-details">
                             Logged: ${pill.date} at ${pill.time}
-                            ${pill.dosage ? `<br>Dosage: ${pill.dosage}` : ''}
-                            ${pill.notes ? `<br>Notes: ${pill.notes}` : ''}
+                            ${pill.dosage ? `<br>Dosage: ${escapeHtml(pill.dosage)}` : ''}
+                            ${pill.frequency ? `<br>Frequency: ${escapeHtml(pill.frequency)}` : ''}
+                            ${pill.notes ? `<br>Notes: ${escapeHtml(pill.notes)}` : ''}
+                            ${hasReminder ? '<br><span class="reminder-indicator">🔔 Reminder set</span>' : ''}
                         </div>
                     </div>
-                    <button class="list-action-btn delete-btn" aria-label="Delete ${pill.name}">✖</button>
-                </div>
-                <div class="medication-meta">
-                    ${pill.frequency ? `<span class="meta-tag">${pill.frequency}</span>` : ''}
-                    ${hasReminder ? `<span class="reminder-badge">⏰ Reminder Set</span>` : ''}
+                    <button class="delete-btn" aria-label="Delete ${escapeHtml(pill.name)}">×</button>
                 </div>
             </div>
         `;
@@ -152,33 +229,42 @@ document.addEventListener("DOMContentLoaded", function () {
         allPills = allPills.filter(pill => pill.id !== pillId);
         reminders = reminders.filter(reminder => reminder.pillId !== pillId);
         savePills();
-        saveReminders();
-        displayPills(getFilteredPills());
+        displayPills(allPills);
         updatePillSectionVisibility();
     }
     
-    // Search functionality
-    function handleSearch(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredPills = getFilteredPills(searchTerm);
-        displayPills(filteredPills);
+    function updatePillSectionVisibility() {
+        if (allPills.length > 0) {
+            pillSection.style.display = "block";
+        } else {
+            pillSection.style.display = "none";
+        }
     }
     
-    function getFilteredPills(searchTerm = "") {
-        if (!searchTerm) return allPills;
+    // Search functionality
+    function handleSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
         
-        return allPills.filter(pill => 
+        if (!searchTerm) {
+            displayPills(allPills);
+            return;
+        }
+        
+        const filteredPills = allPills.filter(pill => 
             pill.name.toLowerCase().includes(searchTerm) ||
             pill.dosage.toLowerCase().includes(searchTerm) ||
-            pill.frequency.toLowerCase().includes(searchTerm) ||
-            pill.notes.toLowerCase().includes(searchTerm)
+            pill.notes.toLowerCase().includes(searchTerm) ||
+            pill.frequency.toLowerCase().includes(searchTerm)
         );
+        
+        displayPills(filteredPills);
     }
     
     // Notification functionality
     function checkNotificationPermission() {
         if ("Notification" in window) {
-            if (Notification.permission === "default" && !localStorage.getItem("notificationDismissed")) {
+            notificationPermission = Notification.permission === "granted";
+            if (Notification.permission === "default") {
                 notificationSetup.style.display = "block";
             }
         }
@@ -188,11 +274,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if ("Notification" in window) {
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    showMessage("Notifications enabled! You'll receive medication reminders.", "success");
+                    notificationPermission = true;
                     notificationSetup.style.display = "none";
-                    scheduleReminders();
-                } else {
-                    showMessage("Notifications denied. You can enable them in browser settings.", "error");
+                    showMessage("Notifications enabled successfully!", "success");
                 }
             });
         }
@@ -200,49 +284,46 @@ document.addEventListener("DOMContentLoaded", function () {
     
     function dismissNotificationBanner() {
         notificationSetup.style.display = "none";
-        localStorage.setItem("notificationDismissed", "true");
     }
     
-    function addReminder(pill, time) {
+    // Reminder functionality
+    function addReminder(pill, reminderTime) {
         const reminder = {
-            id: Date.now(),
+            id: Date.now() + Math.random(),
             pillId: pill.id,
             pillName: pill.name,
-            time: time,
+            time: reminderTime,
             active: true
         };
         
         reminders.push(reminder);
-        saveReminders();
         scheduleReminder(reminder);
     }
     
     function scheduleReminder(reminder) {
-        if (!("Notification" in window) || Notification.permission !== "granted") {
-            return;
-        }
-        
-        const [hours, minutes] = reminder.time.split(':');
         const now = new Date();
-        const reminderTime = new Date();
-        reminderTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        const [hours, minutes] = reminder.time.split(':').map(Number);
+        const reminderDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
         
-        // If time has passed today, schedule for tomorrow
-        if (reminderTime <= now) {
-            reminderTime.setDate(reminderTime.getDate() + 1);
+        // If the time has passed today, schedule for tomorrow
+        if (reminderDate <= now) {
+            reminderDate.setDate(reminderDate.getDate() + 1);
         }
         
-        const timeUntilReminder = reminderTime.getTime() - now.getTime();
+        const timeUntilReminder = reminderDate.getTime() - now.getTime();
         
         setTimeout(() => {
-            new Notification(`Medication Reminder`, {
-                body: `Time to take your ${reminder.pillName}`,
-                icon: '/favicon.ico',
-                tag: `reminder-${reminder.id}`
-            });
+            if (notificationPermission && reminder.active) {
+                new Notification(`Medication Reminder`, {
+                    body: `Time to take your ${reminder.pillName}`,
+                    icon: '💊'
+                });
+            }
             
-            // Schedule next day's reminder
-            scheduleReminder(reminder);
+            // Reschedule for next day
+            const nextDay = new Date(reminderDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            scheduleReminder({ ...reminder, time: reminder.time });
         }, timeUntilReminder);
     }
     
@@ -266,105 +347,92 @@ document.addEventListener("DOMContentLoaded", function () {
             headers.join(","),
             ...allPills.map(pill => [
                 `"${pill.name}"`,
-                `"${pill.dosage || ''}"`,
-                `"${pill.frequency || ''}"`,
-                `"${pill.notes || ''}"`,
+                `"${pill.dosage}"`,
+                `"${pill.frequency}"`,
+                `"${pill.notes}"`,
                 `"${pill.date}"`,
                 `"${pill.time}"`
             ].join(","))
         ].join("\n");
         
-        downloadFile(csvContent, "medication-log.csv", "text/csv");
-        showMessage("Medication log exported successfully!", "success");
+        downloadFile(csvContent, "medications.csv", "text/csv");
+        showMessage("Medications exported to CSV!", "success");
     }
     
     function exportToJSON() {
-        const data = {
+        if (allPills.length === 0) {
+            showMessage("No medications to export.", "error");
+            return;
+        }
+        
+        const exportData = {
             pills: allPills,
             reminders: reminders,
-            exportDate: new Date().toISOString(),
-            version: "1.0"
+            exportDate: new Date().toISOString()
         };
         
-        const jsonContent = JSON.stringify(data, null, 2);
+        const jsonContent = JSON.stringify(exportData, null, 2);
         downloadFile(jsonContent, "medication-backup.json", "application/json");
-        showMessage("Backup created successfully!", "success");
+        showMessage("Data backup created!", "success");
     }
     
-    function downloadFile(content, fileName, mimeType) {
-        const blob = new Blob([content], { type: mimeType });
+    function downloadFile(content, filename, contentType) {
+        const blob = new Blob([content], { type: contentType });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
     }
     
-    // Import functionality
-    function importData(e) {
-        const file = e.target.files[0];
+    function importData(event) {
+        const file = event.target.files[0];
         if (!file) return;
         
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const data = JSON.parse(e.target.result);
+                const importedData = JSON.parse(e.target.result);
                 
-                if (data.pills && Array.isArray(data.pills)) {
-                    // Merge with existing data
-                    const existingIds = allPills.map(p => p.id);
-                    const newPills = data.pills.filter(p => !existingIds.includes(p.id));
-                    
-                    allPills = [...allPills, ...newPills];
-                    
-                    if (data.reminders && Array.isArray(data.reminders)) {
-                        const existingReminderIds = reminders.map(r => r.id);
-                        const newReminders = data.reminders.filter(r => !existingReminderIds.includes(r.id));
-                        reminders = [...reminders, ...newReminders];
-                        saveReminders();
-                    }
-                    
+                if (importedData.pills && Array.isArray(importedData.pills)) {
+                    allPills = importedData.pills;
+                    reminders = importedData.reminders || [];
                     savePills();
                     displayPills(allPills);
                     updatePillSectionVisibility();
-                    scheduleReminders();
-                    
-                    showMessage(`Successfully imported ${newPills.length} medications!`, "success");
+                    showMessage(`Imported ${allPills.length} medications!`, "success");
                 } else {
-                    showMessage("Invalid file format. Please select a valid backup file.", "error");
+                    showMessage("Invalid file format.", "error");
                 }
             } catch (error) {
-                showMessage("Error importing file. Please check the file format.", "error");
+                showMessage("Error reading file.", "error");
+                console.error("Import error:", error);
             }
         };
-        
         reader.readAsText(file);
-        importInput.value = ""; // Reset file input
+        
+        // Reset file input
+        event.target.value = "";
     }
     
-    // Storage functions
-    function savePills() {
-        localStorage.setItem("pills", JSON.stringify(allPills));
-    }
-    
-    function saveReminders() {
-        localStorage.setItem("reminders", JSON.stringify(reminders));
-    }
-    
-    function updatePillSectionVisibility() {
-        pillSection.style.display = allPills.length > 0 ? 'block' : 'none';
-    }
-    
-    function showMessage(message, type) {
+    // Message display
+    function showMessage(message, type = "success") {
         formMessage.textContent = message;
         formMessage.className = `alert ${type}`;
-        formMessage.style.display = 'block';
+        formMessage.style.display = "block";
         
         setTimeout(() => {
-            formMessage.style.display = 'none';
-        }, 4000);
+            formMessage.style.display = "none";
+        }, 3000);
+    }
+    
+    // Utility function
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
     }
 });
