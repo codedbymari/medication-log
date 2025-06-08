@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medication Log</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- Header -->
@@ -33,7 +33,7 @@
       </form>
       
       <!-- Additional Form Fields (Hidden by default) -->
-      <div id="additional-fields" class="feature-panel">
+      <div id="additional-fields" class="feature-panel" style="display:none;">
         <form id="detailed-form">
           <label for="pill-dosage">Dosage (optional):</label>
           <input type="text" id="pill-dosage" placeholder="e.g., 500mg, 2 tablets">
@@ -61,13 +61,13 @@
       
       <!-- Feature Tabs (Hidden sections) -->
       <div class="feature-tabs">
-        <button class="tab-button" data-tab="notifications">🔔 Notifications</button>
+        <button class="tab-button" data-tab="notifications"> Notifications</button>
         <button class="tab-button" data-tab="search">🔍 Search</button>
         <button class="tab-button" data-tab="export">📤 Export/Import</button>
       </div>
       
       <!-- Notification Panel (Hidden by default) -->
-      <div id="notification-panel" class="feature-panel" data-panel="notifications">
+      <div id="notification-panel" class="feature-panel" data-panel="notifications" style="display:none;">
         <div id="notification-setup" class="notification-banner">
           <p>Enable notifications to get medication reminders!</p>
           <button id="enable-notifications" class="btn-small">Enable Notifications</button>
@@ -76,7 +76,7 @@
       </div>
       
       <!-- Search Panel (Hidden by default) -->
-      <div id="search-panel" class="feature-panel" data-panel="search">
+      <div id="search-panel" class="feature-panel" data-panel="search" style="display:none;">
         <div class="search-container">
           <input type="text" id="search-input" placeholder="Search medications..." class="search-input">
         </div>
@@ -86,7 +86,7 @@
       </div>
       
       <!-- Export/Import Panel (Hidden by default) -->
-      <div id="export-panel" class="feature-panel" data-panel="export">
+      <div id="export-panel" class="feature-panel" data-panel="export" style="display:none;">
         <div class="action-buttons">
           <button id="export-csv" class="btn-secondary">Export CSV</button>
           <button id="export-json" class="btn-secondary">Backup Data</button>
